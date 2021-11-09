@@ -1,4 +1,4 @@
-# Özellikleri
+# <marquee behavior=alternate>ÖZELLİKLER</marquee>
 1-Temel kimlik doğrulama kaba kuvvet
 2-Özet kimlik doğrulama kaba kuvvet
 3-Kimlik bilgileri öncelikli cihazlar
