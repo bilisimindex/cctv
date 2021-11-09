@@ -1,38 +1,37 @@
 import socket
+def  tarif ( url , sıra ):
+    msg  =  "TANIMLAMA {} RTSP/1.0 \r \n " . biçim ( url )
+    msg  +=  "CSeq: {} \r \n " . biçim ( sıra )
+    msg  +=  "Kullanıcı Aracısı: LibVLC/2.1.4 (LIVE555 Akış Ortamı v2014.01.21)"
+    msg  +=  "Kabul et: uygulama/sdp"
+    msg  +=  " \r \n \r \n "
+     msj'i iade et . kodlamak ()
 
-def describe(url, sequence):
-    msg = "DESCRIBE {} RTSP/1.0\r\n".format(url)
-    msg += "CSeq: {}\r\n".format(sequence)
-    msg += "User-Agent: LibVLC/2.1.4 (LIVE555 Streaming Media v2014.01.21)"
-    msg += "Accept: application/sdp"
-    msg += "\r\n\r\n"
-    return msg.encode()
+def  karar ( target , port , url = Yok ):
+    dene :
+        authMethod  =  Yok  # Yok ile başlıyor çünkü henüz bilmiyoruz
+        sıra  =  0  # İstek dizisinin başlatılması (her istekte gereklidir)
+        recBuffer  =  ""
 
-def decide(target, port, url=None):
-    try:
-        authMethod = None # Starting with None cause we don't know yet
-        sequence = 0 # Starting request sequence (needed in each request)
-        recBuffer = ""
+        if  url  ==  Yok :
+            descURL  =  "rtsp://{}:{}/asdfRandomPathBurada" . biçim ( hedef , bağlantı noktası ) # 200 yanıttan kaçınma
+        başka :
+            descURL  =  url
 
-        if url == None:
-            descURL = "rtsp://{}:{}/asdfRandomPathHere".format(target, port) # Avoiding 200 responses
-        else:
-            descURL = url
+        while  len ( recBuffer ) ==  0 : # Bazı cihazlar sıfır uzunluklu yanıtla (!)
+            Eğer  sekansı  >  100 :
+                break  # 0 uzunlukta yanıtlar alırsak ara x100 - bunun bir rota-ilk cihaz olduğunu varsayalım
+            çorap  =  yuva . soket ( soket . AF_INET , soket . SOCK_STREAM )
+            çorap . settimeout ( 10 ) # Sokete 20 saniye zaman aşımı ver
+            çorap . bağlan (( str ( hedef ), bağlantı noktası )) # Hedefe bağlan
+            çorap . göndermek ( açıklamak ( descURL , dizi )) # isteği DESCRIBE gönder
+            recBuffer  =  çorap . tekrar ( 1024 ). decode () # Yanıtı al
+            dizi  +=  1
 
-        while len(recBuffer) == 0: # Some devices respond with zero-length response (!)
-            if sequence > 100:
-                break # Break if we get 0-length responses x100 - assume it's a route-first device
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.settimeout(10) # Give socket 20 seconds timeout
-            sock.connect((str(target), port)) # Connect to the target
-            sock.send(describe(descURL, sequence)) # Send the DESCRIBE request
-            recBuffer = sock.recv(1024).decode() # Receive the response
-            sequence += 1
+        için  auth  içinde  recBuffer . split ( " \n " ): # Yanıt olarak her satır için
+            eğer  "WWW-Authenticate:"  in  auth : WWW-Authenticate içinde var # Eğer
+                authMethod  =  Yetkilendirme . böl ()[ 1 ]. strip () # Yetkilendirme Yöntemini Alın
+    hariç :
+        dönüş
 
-        for auth in recBuffer.split("\n"): # For each line in response
-            if "WWW-Authenticate:" in auth: # If there is WWW-Authenticate in it
-                authMethod = auth.split()[1].strip() # Get the Auth Method
-    except:
-        return
-
-    return authMethod
+    dönüş  authMethod
