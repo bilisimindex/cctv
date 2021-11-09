@@ -1,40 +1,40 @@
-import xml.etree.ElementTree as ET
-import os
+ xml'yi içe aktarın . ağaç . ET olarak ElementTree  
+ işletim sistemini içe aktar
 
-def build(username="invalidusername", password="invalidpassword"):
-    duplicateCheck = []
-    tree = ET.parse(os.path.join(os.path.dirname(__file__), 'resources\\sources.xml'))
-    root = tree.getroot()
-    for Manufacturer in root.iter("Manufacturer"):
-        for URL in Manufacturer:
-            finalURL = ""
+def  build ( username = "invalidusername" , password = "invalidpassword" ):
+    yinelenenKontrol  = []
+    ağaç  =  ET . ayrıştırma ( os . path . birleştirme ( os . path . dirname ( __file__ ), 'resources \\ Resources.xml ' ) )
+    kök  =  ağaç . kök ()
+    için  Üretici  içinde  kökü . iter ( "Üretici" ):
+        için  URL'ye  de  Üretici :
+            finalURL  =  ""
 
-            # Ignore anything with [AUTH] indicator in XML (no need for now & it's confusing for the PoC)
-            if "[AUTH]" in URL.attrib["url"]:
-                continue
+            # XML'de [AUTH] göstergesi olan hiçbir şeyi yoksay (şimdilik gerek yok ve PoC için kafa karıştırıcı)
+            eğer  "[AUTH]"  in  URL'ye . öznitelik [ "url" ]:
+                devam et
                 
-            if URL.attrib["prefix"] == "rtsp://": # Use only RTSP for the PoC - not HTTP
-                if URL.attrib["url"].startswith("/"):
-                    finalURL = URL.attrib["url"][1:]
-                else:
-                    finalURL = URL.attrib["url"]
-                finalURL = finalURL.replace("[USERNAME]", username)
-                finalURL = finalURL.replace("[PASSWORD]", password)
+            eğer  URL . attrib [ "prefix" ] ==  "rtsp://" : # PoC için yalnızca RTSP kullanın - HTTP değil
+                eğer  URL . öznitelik [ "url" ]. ile başlar ( "/" ):
+                    finalURL  =  URL . öznitelik [ "url" ][ 1 :]
+                başka :
+                    finalURL  =  URL . nitelik [ "url" ]
+                finalURL  =  finalURL . değiştir ( "[KULLANICI ADI]" , kullanıcı adı )
+                finalURL  =  finalURL . değiştir ( "[ŞİFRE]" , şifre )
                 
-                # Subtype won't make any difference, so we remove the possible duplicates from the XML
-                finalURL = finalURL.replace("&subtype=00", "")
-                finalURL = finalURL.replace("&subtype=01", "")
-                finalURL = finalURL.replace("&subtype=02", "")
-                finalURL = finalURL.replace("&subtype=0", "")
-                finalURL = finalURL.replace("&subtype=1", "")
-                finalURL = finalURL.replace("&subtype=2", "")
+                # Alt tür herhangi bir fark yaratmayacak, bu nedenle olası kopyaları XML'den kaldırıyoruz
+                finalURL  =  finalURL . değiştir ( "&subtype=00" , "" )
+                finalURL  =  finalURL . değiştir ( "&subtype=01" , "" )
+                finalURL  =  finalURL . değiştir ( "&subtype=02" , "" )
+                finalURL  =  finalURL . değiştir ( "&subtype=0" , "" )
+                finalURL  =  finalURL . değiştir ( "&subtype=1" , "" )
+                finalURL  =  finalURL . değiştir ( "&subtype=2" , "" )
 
-                if "[CHANNEL]" not in finalURL:
-                    if finalURL not in duplicateCheck:
-                        duplicateCheck.append(finalURL)
-                else:
-                    for channelID in range(1, 21): # Max 20 channels (it probably will translate 10 as 1 in some models)
-                        finalChannelURL = finalURL.replace("[CHANNEL]", str(channelID))
-                        if finalChannelURL not in duplicateCheck:
-                            duplicateCheck.append(finalChannelURL)
-    return duplicateCheck
+                eğer  "[KANAL]"  değil  de  Son URL :
+                    eğer  Son URL  değil  de  duplicateCheck :
+                        kopyalaKontrol . Ekleme ( Son URL )
+                başka :
+                    için  KanalNo  içinde  aralıkta ( 1 , 21 ): 20 kanal # Maks (muhtemelen bazı modellerde 1 olarak 10 çevirecek)
+                        finalChannelURL  =  finalURL . değiştir ( "[KANAL]" , str ( kanalkimliği ))
+                        eğer  finalChannelURL  değil  de  duplicateCheck :
+                            kopyalaKontrol . Ekleme ( finalChannelURL )
+    dönüş  duplicateCheck
